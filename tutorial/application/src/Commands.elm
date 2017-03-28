@@ -55,15 +55,15 @@ type Method = Patch | Post | Delete
 -- // Player
 savePlayerRequest : Method -> Player -> Http.Request Player
 savePlayerRequest method player =
-  let ( methodStr, urlId ) = case method of
-        Patch-> ( "PATCH", player.id )
-        Post -> ( "POST", "" )
-        Delete -> ( "DELETE", player.id )
+  let ( methodStr, decoder, urlId ) = case method of
+        Patch-> ( "PATCH", playerDecoder, player.id )
+        Post -> ( "POST", playerDecoder, "" )
+        Delete -> ( "DELETE", Decode.succeed player, player.id )
   in Http.request {
         body = player
           |>  playerEncoder
           |>  Http.jsonBody
-    ,   expect = Http.expectJson playerDecoder
+    ,   expect = Http.expectJson decoder
     ,   headers = [ ]
 --  ,   method = "PATCH"
     ,   method = methodStr

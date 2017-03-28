@@ -57,20 +57,26 @@ var _user$project$Commands$savePlayerRequest = F2(
 			var _p1 = method;
 			switch (_p1.ctor) {
 				case 'Patch':
-					return {ctor: '_Tuple2', _0: 'PATCH', _1: player.id};
+					return {ctor: '_Tuple3', _0: 'PATCH', _1: _user$project$Commands$playerDecoder, _2: player.id};
 				case 'Post':
-					return {ctor: '_Tuple2', _0: 'POST', _1: ''};
+					return {ctor: '_Tuple3', _0: 'POST', _1: _user$project$Commands$playerDecoder, _2: ''};
 				default:
-					return {ctor: '_Tuple2', _0: 'DELETE', _1: player.id};
+					return {
+						ctor: '_Tuple3',
+						_0: 'DELETE',
+						_1: _elm_lang$core$Json_Decode$succeed(player),
+						_2: player.id
+					};
 			}
 		}();
 		var methodStr = _p0._0;
-		var urlId = _p0._1;
+		var decoder = _p0._1;
+		var urlId = _p0._2;
 		return _elm_lang$http$Http$request(
 			{
 				body: _elm_lang$http$Http$jsonBody(
 					_user$project$Commands$playerEncoder(player)),
-				expect: _elm_lang$http$Http$expectJson(_user$project$Commands$playerDecoder),
+				expect: _elm_lang$http$Http$expectJson(decoder),
 				headers: {ctor: '[]'},
 				method: methodStr,
 				timeout: _elm_lang$core$Maybe$Nothing,
