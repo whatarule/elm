@@ -16,7 +16,6 @@ type alias Model = Int
 model : Model
 model = 0
 
-
 type Msg = Increment | Decrement | Reset
 
 update : Msg -> Model -> Model

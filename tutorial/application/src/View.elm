@@ -13,9 +13,13 @@ view model = div [ ] [ page model ]
 
 page : Model -> Html Msg
 page model = case model.route of
-    Models.PlayersRoute -> Players.List.view model.players
-    Models.PlayerRoute id -> playerEditPage model id
-    Models.NotFoundRoute -> notFoundView
+  Models.PlayersRoute ->
+  --Players.List.view model.players
+    Players.List.view model
+  Models.PlayerRoute id ->
+    playerEditPage model id
+  Models.NotFoundRoute ->
+    notFoundView
 
 playerEditPage : Model -> PlayerId -> Html Msg
 playerEditPage model playerId = case model.players of
@@ -26,9 +30,13 @@ playerEditPage model playerId = case model.players of
             |> List.filter ( \player -> player.id == playerId )
             |> List.head
         in case maybePlayer of
-            Just player -> Players.Edit.view player
+        --  Just player -> Players.Edit.view player
+            Just player -> Players.Edit.view model player
             Nothing -> notFoundView
     RemoteData.Failure err -> text ( toString err )
 
 notFoundView : Html msg
 notFoundView = div [ ] [ text "Not found" ]
+
+
+

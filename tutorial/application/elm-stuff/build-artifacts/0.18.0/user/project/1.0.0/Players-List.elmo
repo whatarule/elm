@@ -1,3 +1,82 @@
+var _user$project$Players_List$deleteBtn = F2(
+	function (players, deletedPlayer) {
+		var msg = A2(_user$project$Msgs$DeletePlayer, players, deletedPlayer);
+		return A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('btn regular'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(msg),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Delete'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Players_List$lastId = function (players) {
+	var lastPlayer = _elm_lang$core$List$head(
+		_elm_lang$core$List$reverse(players));
+	var _p0 = lastPlayer;
+	if (_p0.ctor === 'Just') {
+		return _p0._0.id;
+	} else {
+		return '1';
+	}
+};
+var _user$project$Players_List$newId = function (players) {
+	return _elm_lang$core$Basics$toString(
+		A2(
+			F2(
+				function (x, y) {
+					return x + y;
+				}),
+			1,
+			A2(
+				_elm_lang$core$Result$withDefault,
+				1,
+				_elm_lang$core$String$toInt(
+					_user$project$Players_List$lastId(players)))));
+};
+var _user$project$Players_List$addBtn = function (players) {
+	var newPlayer = {
+		id: _user$project$Players_List$newId(players),
+		name: '',
+		level: 1
+	};
+	var msg = A2(_user$project$Msgs$AddPlayer, players, newPlayer);
+	return A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('btn regular'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(msg),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$i,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('fa fa-pencil mr1'),
+					_1: {ctor: '[]'}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Add'),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Players_List$editBtn = function (player) {
 	var path = _user$project$Routing$playerPath(player.id);
 	return A2(
@@ -33,7 +112,7 @@ var _user$project$Players_List$editBtn = function (player) {
 			}
 		});
 };
-var _user$project$Players_List$playerRow = function (player) {
+var _user$project$Players_List$playerRowNew = function (players) {
 	return A2(
 		_elm_lang$html$Html$tr,
 		{ctor: '[]'},
@@ -42,19 +121,55 @@ var _user$project$Players_List$playerRow = function (player) {
 			_0: A2(
 				_elm_lang$html$Html$td,
 				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(player.id),
-					_1: {ctor: '[]'}
-				}),
+				{ctor: '[]'}),
 			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$td,
+					{ctor: '[]'},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$td,
+						{ctor: '[]'},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$td,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _user$project$Players_List$addBtn(players),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$td,
+								{ctor: '[]'},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Players_List$playerRow = F2(
+	function (players, player) {
+		return A2(
+			_elm_lang$html$Html$tr,
+			{ctor: '[]'},
+			{
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$td,
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text(player.name),
+						_0: _elm_lang$html$Html$text(player.id),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -64,8 +179,7 @@ var _user$project$Players_List$playerRow = function (player) {
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(player.level)),
+							_0: _elm_lang$html$Html$text(player.name),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -75,15 +189,37 @@ var _user$project$Players_List$playerRow = function (player) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _user$project$Players_List$editBtn(player),
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(player.level)),
 								_1: {ctor: '[]'}
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$td,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _user$project$Players_List$editBtn(player),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$td,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(_user$project$Players_List$deleteBtn, players, player),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
 					}
 				}
-			}
-		});
-};
+			});
+	});
 var _user$project$Players_List$list = function (players) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -152,7 +288,17 @@ var _user$project$Players_List$list = function (players) {
 						_0: A2(
 							_elm_lang$html$Html$tbody,
 							{ctor: '[]'},
-							A2(_elm_lang$core$List$map, _user$project$Players_List$playerRow, players)),
+							A2(
+								_elm_lang$core$List$append,
+								A2(
+									_elm_lang$core$List$map,
+									_user$project$Players_List$playerRow(players),
+									players),
+								{
+									ctor: '::',
+									_0: _user$project$Players_List$playerRowNew(players),
+									_1: {ctor: '[]'}
+								})),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -160,18 +306,63 @@ var _user$project$Players_List$list = function (players) {
 		});
 };
 var _user$project$Players_List$maybeList = function (response) {
-	var _p0 = response;
-	switch (_p0.ctor) {
+	var _p1 = response;
+	switch (_p1.ctor) {
 		case 'NotAsked':
 			return _elm_lang$html$Html$text('');
 		case 'Loading':
 			return _elm_lang$html$Html$text('Loading...');
 		case 'Success':
-			return _user$project$Players_List$list(_p0._0);
+			return _user$project$Players_List$list(_p1._0);
 		default:
 			return _elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(_p0._0));
+				_elm_lang$core$Basics$toString(_p1._0));
 	}
+};
+var _user$project$Players_List$errValidation = function (model) {
+	var color = function () {
+		var _p2 = model.err;
+		switch (_p2) {
+			case 'Unchanged':
+				return 'grey';
+			case 'Changed successfully':
+				return 'green';
+			default:
+				return 'red';
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('m3'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('col col-5'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'color', _1: color},
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(model.err),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Players_List$nav = A2(
 	_elm_lang$html$Html$div,
@@ -196,7 +387,7 @@ var _user$project$Players_List$nav = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Players_List$view = function (response) {
+var _user$project$Players_List$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -205,8 +396,12 @@ var _user$project$Players_List$view = function (response) {
 			_0: _user$project$Players_List$nav,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Players_List$maybeList(response),
-				_1: {ctor: '[]'}
+				_0: _user$project$Players_List$maybeList(model.players),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Players_List$errValidation(model),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };

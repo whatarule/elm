@@ -1,89 +1,131 @@
-var _user$project$Main$checkbox = F2(
-	function (msg, name) {
-		return A2(
-			_elm_lang$html$Html$label,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					{
+var _user$project$Main$sizeToStyle = function (fontsize) {
+	var size = function () {
+		var _p0 = fontsize;
+		switch (_p0.ctor) {
+			case 'Small':
+				return '0.8rem';
+			case 'Medium':
+				return '1.0rem';
+			default:
+				return '1.2rem';
+		}
+	}();
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'font-size', _1: size},
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$viewRadio = function (_p1) {
+	var _p2 = _p1;
+	return A2(
+		_elm_lang$html$Html$label,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('radio'),
+					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
+						_0: _elm_lang$html$Html_Attributes$name('font-size'),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(msg),
+							_0: _elm_lang$html$Html_Events$onClick(_p2._1),
 							_1: {ctor: '[]'}
 						}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(name),
-					_1: {ctor: '[]'}
-				}
-			});
-	});
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(_p2._0),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$viewPicker = function (options) {
+	return A2(
+		_elm_lang$html$Html$fieldset,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _user$project$Main$viewRadio, options));
+};
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'ToggleNotifications':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{notifications: !model.notifications}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ToggleAutoplay':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{autoplay: !model.autoplay}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{location: !model.location}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
+		var _p3 = msg;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{fontsize: _p3._0}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
 	});
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {notifications: a, autoplay: b, location: c};
+var _user$project$Main$intro = '\n# Anna Karenina\n## Chapter 1\nHappy families are all alike; every unhappy family is unhappy in its own way.\nEverything was in confusion in the Oblonskys’ house. The wife had discovered\nthat the husband was carrying on an intrigue with a French girl, who had been\na governess in their family, and she had announced to her husband that she\ncould not go on living in the same house with him...\n';
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {fontsize: a, content: b};
 	});
+var _user$project$Main$Large = {ctor: 'Large'};
+var _user$project$Main$Medium = {ctor: 'Medium'};
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
-	_0: A3(_user$project$Main$Model, false, false, false),
+	_0: A2(_user$project$Main$Model, _user$project$Main$Medium, _user$project$Main$intro),
 	_1: _elm_lang$core$Platform_Cmd$none
 };
-var _user$project$Main$ToggleLocation = {ctor: 'ToggleLocation'};
-var _user$project$Main$ToggleAutoplay = {ctor: 'ToggleAutoplay'};
-var _user$project$Main$ToggleNotifications = {ctor: 'ToggleNotifications'};
+var _user$project$Main$Small = {ctor: 'Small'};
+var _user$project$Main$SwitchTo = function (a) {
+	return {ctor: 'SwitchTo', _0: a};
+};
 var _user$project$Main$view = function (model) {
 	return A2(
-		_elm_lang$html$Html$fieldset,
+		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(_user$project$Main$checkbox, _user$project$Main$ToggleNotifications, 'Email Notifications'),
+			_0: _user$project$Main$viewPicker(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'Small',
+						_1: _user$project$Main$SwitchTo(_user$project$Main$Small)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'Medium',
+							_1: _user$project$Main$SwitchTo(_user$project$Main$Medium)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'Large',
+								_1: _user$project$Main$SwitchTo(_user$project$Main$Large)
+							},
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
 			_1: {
 				ctor: '::',
-				_0: A2(_user$project$Main$checkbox, _user$project$Main$ToggleAutoplay, 'Video Autoplay'),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$checkbox, _user$project$Main$ToggleLocation, 'Use Location'),
-					_1: {ctor: '[]'}
-				}
+				_0: A2(
+					_evancz$elm_markdown$Markdown$toHtml,
+					{
+						ctor: '::',
+						_0: _user$project$Main$sizeToStyle(model.fontsize),
+						_1: {ctor: '[]'}
+					},
+					model.content),
+				_1: {ctor: '[]'}
 			}
 		});
 };

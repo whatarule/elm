@@ -24,7 +24,7 @@ var _user$project$View$playerEditPage = F2(
 						_p0._0));
 				var _p1 = maybePlayer;
 				if (_p1.ctor === 'Just') {
-					return _user$project$Players_Edit$view(_p1._0);
+					return A2(_user$project$Players_Edit$view, model, _p1._0);
 				} else {
 					return _user$project$View$notFoundView;
 				}
@@ -37,7 +37,7 @@ var _user$project$View$page = function (model) {
 	var _p2 = model.route;
 	switch (_p2.ctor) {
 		case 'PlayersRoute':
-			return _user$project$Players_List$view(model.players);
+			return _user$project$Players_List$view(model);
 		case 'PlayerRoute':
 			return A2(_user$project$View$playerEditPage, model, _p2._0);
 		default:
