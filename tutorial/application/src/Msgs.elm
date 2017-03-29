@@ -16,6 +16,6 @@ type Msg =
     |   DeletePlayer ( List Player ) Player
 --  |   ChangePlayers Model ( List Player )
     |   OnPlayerSave ( Result Http.Error Player )
-    |   OnPlayersSave ( Result Http.Error ( List Player ) )
+--  |   OnPlayersSave ( Result Http.Error ( List Player ) )
 
 

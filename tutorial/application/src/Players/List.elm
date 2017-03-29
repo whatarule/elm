@@ -108,7 +108,9 @@ playerRowNew players = tr [ ] [
 editBtn : Player -> Html Msg
 editBtn player =
     let path = playerPath player.id
-    in a [ class "btn regular", href path, onLinkClick ( ChangeLocation path ) ] [
+    in a [ class "btn regular", href path
+         , onLinkClick ( ChangeLocation path )
+         ] [
           i [ class "fa fa-pencil mr1" ] [ ]
       ,   text "Edit"
       ]
@@ -121,7 +123,9 @@ addBtn players =
         ,   name = ""
         ,   level = 1
         }
-    in a [ class "btn regular", onClick msg ] [
+    in a [ class "btn regular"
+         , onClick msg
+         ] [
           i [ class "fa fa-pencil mr1" ] [ ]
         , text "Add"
         ]

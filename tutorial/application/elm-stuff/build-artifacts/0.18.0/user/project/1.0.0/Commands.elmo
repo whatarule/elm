@@ -26,7 +26,7 @@ var _user$project$Commands$playerEncoder = function (player) {
 	};
 	return _elm_lang$core$Json_Encode$object(attributes);
 };
-var _user$project$Commands$savePlayerUrl = function (playerId) {
+var _user$project$Commands$playerUrl = function (playerId) {
 	return A2(_elm_lang$core$Basics_ops['++'], 'http://localhost:4000/players/', playerId);
 };
 var _user$project$Commands$savePlayersUrl = 'http://localhost:4000/players/';
@@ -80,7 +80,7 @@ var _user$project$Commands$savePlayerRequest = F2(
 				headers: {ctor: '[]'},
 				method: methodStr,
 				timeout: _elm_lang$core$Maybe$Nothing,
-				url: _user$project$Commands$savePlayerUrl(urlId),
+				url: _user$project$Commands$playerUrl(urlId),
 				withCredentials: false
 			});
 	});
@@ -99,6 +99,32 @@ var _user$project$Commands$savePlayersCmd = F3(
 			A2(_user$project$Commands$savePlayerRequest, method, player));
 	});
 var _user$project$Commands$playersDecoder = _elm_lang$core$Json_Decode$list(_user$project$Commands$playerDecoder);
+var _user$project$Commands$checkNewPlayer = function (response) {
+	var _p2 = response;
+	switch (_p2.ctor) {
+		case 'NotAsked':
+			return _elm_lang$core$Platform_Cmd$none;
+		case 'Loading':
+			return _elm_lang$core$Platform_Cmd$none;
+		case 'Failure':
+			return _elm_lang$core$Platform_Cmd$none;
+		default:
+			var maybePlayer = _elm_lang$core$List$head(
+				A2(
+					_elm_lang$core$List$filter,
+					function (player) {
+						return _elm_lang$core$Native_Utils.eq(player.name, '');
+					},
+					_p2._0));
+			var _p3 = maybePlayer;
+			if (_p3.ctor === 'Just') {
+				return _elm_lang$navigation$Navigation$newUrl(
+					_user$project$Routing$playerPath(_p3._0.id));
+			} else {
+				return _elm_lang$core$Platform_Cmd$none;
+			}
+	}
+};
 var _user$project$Commands$fetchPlayersUrl = 'http://localhost:4000/players';
 var _user$project$Commands$fetchPlayers = A2(
 	_elm_lang$core$Platform_Cmd$map,

@@ -24,3 +24,5 @@ main = Navigation.program Msgs.OnLocationChange {
     ,   update = update
     ,   subscriptions = subscriptions
     }
+
+

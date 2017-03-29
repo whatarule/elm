@@ -3,9 +3,12 @@ module Update exposing (..)
 
 import Msgs exposing ( Msg )
 import Models exposing ( Model, Player )
-import Routing exposing ( parseLocation )
+import Routing exposing ( parseLocation, playerPath )
 import Navigation exposing ( newUrl )
-import Commands exposing ( Method(..), savePlayerCmd, savePlayersCmd, fetchPlayers )
+import Commands exposing
+  ( Method(..)
+  , savePlayerCmd, savePlayersCmd, fetchPlayers
+  , checkNewPlayer )
 import RemoteData
 import List
 
@@ -15,7 +18,8 @@ update msg model = case msg of
   Msgs.ChangeLocation path ->
     ( model, newUrl path )
   Msgs.OnFetchPlayers response ->
-    ( { model | players = response }, Cmd.none )
+  --( { model | players = response }, Cmd.none )
+    ( { model | players = response }, checkNewPlayer response )
   Msgs.OnLocationChange location ->
     let newRoute = parseLocation location
     in ( { model | route = newRoute }, Cmd.none )
@@ -29,7 +33,8 @@ update msg model = case msg of
 
   Msgs.AddPlayer players newPlayer ->
   --let newPlayers = addPlayer players newPlayer
-  --in
+  --let path = playerPath newPlayer.id
+  --in ( model, newUrl path )
     ( model, savePlayerCmd Post newPlayer )
   Msgs.DeletePlayer players deletedPlayer ->
   --let newPlayers = deletePlayer players deletedPlayer
@@ -42,38 +47,46 @@ update msg model = case msg of
   Msgs.OnPlayerSave ( Ok player ) ->
   --( updatePlayer model player , Cmd.none )
     ( updatePlayer model player , fetchPlayers )
+  --( updatePlayer model player , checkNewPlayer player )
   Msgs.OnPlayerSave ( Err error ) ->
     ( { model | err = toString error }, Cmd.none )
-  Msgs.OnPlayersSave ( Ok players ) ->
-    ( updatePlayers model players , Cmd.none )
-  Msgs.OnPlayersSave ( Err error ) ->
-    ( { model | err = toString error }, Cmd.none )
+--Msgs.OnPlayersSave ( Ok players ) ->
+--  ( updatePlayers model players , Cmd.none )
+--Msgs.OnPlayersSave ( Err error ) ->
+--  ( { model | err = toString error }, Cmd.none )
+
+--Msgs.EditNewPlayer player ->
+--  ( model, editNewPlayer player )
 
 
 updatePlayer : Model -> Player -> Model
 updatePlayer model updatedPlayer =
-    let pick currentPlayer =
-        if updatedPlayer.id == currentPlayer.id
-            then updatedPlayer
-            else currentPlayer
-        updatePlayerList players = List.map pick players
-        updatedPlayers = RemoteData.map updatePlayerList model.players
-    in { model | players = updatedPlayers, err = "Changed successfully" }
+  let pick currentPlayer =
+      if updatedPlayer.id == currentPlayer.id
+          then updatedPlayer
+          else currentPlayer
+      updatePlayerList players = List.map pick players
+      updatedPlayers = RemoteData.map updatePlayerList model.players
+  in { model |
+         players = updatedPlayers
+       , err = "Changed successfully"
+       }
 
-updatePlayers : Model -> List Player -> Model
-updatePlayers model players =
-    let updatedPlayers = RemoteData.succeed players
-    in { model | players = updatedPlayers, err = "Changed successfully" }
 
-addPlayer : List Player -> Player -> List Player
-addPlayer players newPlayer =
-    List.append players [ newPlayer ]
-
-deletePlayer : List Player -> Player -> List Player
-deletePlayer players deletedPlayer =
-    let pick currentPlayer =
-          not ( deletedPlayer.id == currentPlayer.id )
-    in List.filter pick players
+--updatePlayers : Model -> List Player -> Model
+--updatePlayers model players =
+--    let updatedPlayers = RemoteData.succeed players
+--    in { model | players = updatedPlayers, err = "Changed successfully" }
+--
+--addPlayer : List Player -> Player -> List Player
+--addPlayer players newPlayer =
+--    List.append players [ newPlayer ]
+--
+--deletePlayer : List Player -> Player -> List Player
+--deletePlayer players deletedPlayer =
+--    let pick currentPlayer =
+--          not ( deletedPlayer.id == currentPlayer.id )
+--    in List.filter pick players
 
 
 

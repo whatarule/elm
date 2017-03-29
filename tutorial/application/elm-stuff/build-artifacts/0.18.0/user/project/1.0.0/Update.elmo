@@ -1,28 +1,3 @@
-var _user$project$Update$deletePlayer = F2(
-	function (players, deletedPlayer) {
-		var pick = function (currentPlayer) {
-			return !_elm_lang$core$Native_Utils.eq(deletedPlayer.id, currentPlayer.id);
-		};
-		return A2(_elm_lang$core$List$filter, pick, players);
-	});
-var _user$project$Update$addPlayer = F2(
-	function (players, newPlayer) {
-		return A2(
-			_elm_lang$core$List$append,
-			players,
-			{
-				ctor: '::',
-				_0: newPlayer,
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Update$updatePlayers = F2(
-	function (model, players) {
-		var updatedPlayers = _krisajenkins$remotedata$RemoteData$succeed(players);
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{players: updatedPlayers, err: 'Changed successfully'});
-	});
 var _user$project$Update$updatePlayer = F2(
 	function (model, updatedPlayer) {
 		var pick = function (currentPlayer) {
@@ -47,12 +22,13 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$navigation$Navigation$newUrl(_p0._0)
 				};
 			case 'OnFetchPlayers':
+				var _p1 = _p0._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{players: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+						{players: _p1}),
+					_1: _user$project$Commands$checkNewPlayer(_p1)
 				};
 			case 'OnLocationChange':
 				var newRoute = _user$project$Routing$parseLocation(_p0._0);
@@ -64,10 +40,10 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ChangeLevel':
-				var _p1 = _p0._0;
+				var _p2 = _p0._0;
 				var updatedPlayer = _elm_lang$core$Native_Utils.update(
-					_p1,
-					{level: _p1.level + _p0._1});
+					_p2,
+					{level: _p2.level + _p0._1});
 				return {
 					ctor: '_Tuple2',
 					_0: model,
@@ -94,30 +70,12 @@ var _user$project$Update$update = F2(
 					_0: model,
 					_1: A2(_user$project$Commands$savePlayerCmd, _user$project$Commands$Delete, _p0._1)
 				};
-			case 'OnPlayerSave':
+			default:
 				if (_p0._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: A2(_user$project$Update$updatePlayer, model, _p0._0._0),
 						_1: _user$project$Commands$fetchPlayers
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								err: _elm_lang$core$Basics$toString(_p0._0._0)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			default:
-				if (_p0._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: A2(_user$project$Update$updatePlayers, model, _p0._0._0),
-						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
 					return {

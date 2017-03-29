@@ -1,6 +1,3 @@
-var _user$project$Msgs$OnPlayersSave = function (a) {
-	return {ctor: 'OnPlayersSave', _0: a};
-};
 var _user$project$Msgs$OnPlayerSave = function (a) {
 	return {ctor: 'OnPlayerSave', _0: a};
 };
