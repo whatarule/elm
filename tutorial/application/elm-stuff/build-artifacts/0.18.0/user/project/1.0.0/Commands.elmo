@@ -20,7 +20,15 @@ var _user$project$Commands$playerEncoder = function (player) {
 					_0: 'level',
 					_1: _elm_lang$core$Json_Encode$int(player.level)
 				},
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'equip',
+						_1: _elm_lang$core$Json_Encode$string(player.equip)
+					},
+					_1: {ctor: '[]'}
+				}
 			}
 		}
 	};
@@ -29,7 +37,7 @@ var _user$project$Commands$playerEncoder = function (player) {
 var _user$project$Commands$playerUrl = function (playerId) {
 	return A2(_elm_lang$core$Basics_ops['++'], 'http://localhost:4000/players/', playerId);
 };
-var _user$project$Commands$savePlayersUrl = 'http://localhost:4000/players/';
+var _user$project$Commands$savePlayersUrl = 'http://localhost:4000/players';
 var _user$project$Commands$onLinkClick = function (message) {
 	var options = {stopPropagation: false, preventDefault: true};
 	return A3(
@@ -40,17 +48,21 @@ var _user$project$Commands$onLinkClick = function (message) {
 };
 var _user$project$Commands$playerDecoder = A3(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-	'level',
-	_elm_lang$core$Json_Decode$int,
+	'equip',
+	_elm_lang$core$Json_Decode$string,
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'name',
-		_elm_lang$core$Json_Decode$string,
+		'level',
+		_elm_lang$core$Json_Decode$int,
 		A3(
 			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-			'id',
+			'name',
 			_elm_lang$core$Json_Decode$string,
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Models$Player))));
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+				'id',
+				_elm_lang$core$Json_Decode$string,
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Models$Player)))));
 var _user$project$Commands$savePlayerRequest = F2(
 	function (method, player) {
 		var _p0 = function () {
@@ -91,14 +103,8 @@ var _user$project$Commands$savePlayerCmd = F2(
 			_user$project$Msgs$OnPlayerSave,
 			A2(_user$project$Commands$savePlayerRequest, method, player));
 	});
-var _user$project$Commands$savePlayersCmd = F3(
-	function (model, method, player) {
-		return A2(
-			_elm_lang$http$Http$send,
-			_user$project$Msgs$OnPlayerSave,
-			A2(_user$project$Commands$savePlayerRequest, method, player));
-	});
 var _user$project$Commands$playersDecoder = _elm_lang$core$Json_Decode$list(_user$project$Commands$playerDecoder);
+var _user$project$Commands$home = _elm_lang$navigation$Navigation$newUrl('http://localhost:3000/');
 var _user$project$Commands$checkNewPlayer = function (response) {
 	var _p2 = response;
 	switch (_p2.ctor) {
@@ -131,6 +137,3 @@ var _user$project$Commands$fetchPlayers = A2(
 	_user$project$Msgs$OnFetchPlayers,
 	_krisajenkins$remotedata$RemoteData$sendRequest(
 		A2(_elm_lang$http$Http$get, _user$project$Commands$fetchPlayersUrl, _user$project$Commands$playersDecoder)));
-var _user$project$Commands$Delete = {ctor: 'Delete'};
-var _user$project$Commands$Post = {ctor: 'Post'};
-var _user$project$Commands$Patch = {ctor: 'Patch'};

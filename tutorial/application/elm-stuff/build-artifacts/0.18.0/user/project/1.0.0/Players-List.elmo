@@ -1,23 +1,22 @@
-var _user$project$Players_List$deleteBtn = F2(
-	function (players, deletedPlayer) {
-		var msg = A2(_user$project$Msgs$DeletePlayer, players, deletedPlayer);
-		return A2(
-			_elm_lang$html$Html$a,
-			{
+var _user$project$Players_List$deleteBtn = function (deletedPlayer) {
+	var msg = _user$project$Msgs$DeletePlayer(deletedPlayer);
+	return A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('btn regular'),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('btn regular'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(msg),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Delete'),
+				_0: _elm_lang$html$Html_Events$onClick(msg),
 				_1: {ctor: '[]'}
-			});
-	});
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Delete'),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Players_List$lastId = function (players) {
 	var lastPlayer = _elm_lang$core$List$head(
 		_elm_lang$core$List$reverse(players));
@@ -42,13 +41,19 @@ var _user$project$Players_List$newId = function (players) {
 				_elm_lang$core$String$toInt(
 					_user$project$Players_List$lastId(players)))));
 };
-var _user$project$Players_List$addBtn = function (players) {
-	var newPlayer = {
+var _user$project$Players_List$newPlayer = function (players) {
+	return {
 		id: _user$project$Players_List$newId(players),
 		name: '',
-		level: 1
+		level: 1,
+		equip: ''
 	};
-	var msg = A2(_user$project$Msgs$AddPlayer, players, newPlayer);
+};
+var _user$project$Players_List$addBtn = function (players) {
+	var msg = A2(
+		_user$project$Msgs$AddPlayer,
+		players,
+		_user$project$Players_List$newPlayer(players));
 	return A2(
 		_elm_lang$html$Html$a,
 		{
@@ -139,26 +144,62 @@ var _user$project$Players_List$playerRowNew = function (players) {
 						_0: A2(
 							_elm_lang$html$Html$td,
 							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _user$project$Players_List$addBtn(players),
-								_1: {ctor: '[]'}
-							}),
+							{ctor: '[]'}),
 						_1: {
 							ctor: '::',
 							_0: A2(
 								_elm_lang$html$Html$td,
 								{ctor: '[]'},
 								{ctor: '[]'}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$td,
+									{ctor: '[]'},
+									{ctor: '[]'}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$td,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _user$project$Players_List$addBtn(players),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$td,
+											{ctor: '[]'},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
 						}
 					}
 				}
 			}
 		});
 };
+var _user$project$Players_List$equipBonus = function (player) {
+	var pick = function (equip) {
+		return _elm_lang$core$Native_Utils.eq(player.equip, equip.name);
+	};
+	var maybeEquip = _elm_lang$core$List$head(
+		A2(_elm_lang$core$List$filter, pick, _user$project$Players_Edit$listEquip));
+	var _p1 = maybeEquip;
+	if (_p1.ctor === 'Just') {
+		return _p1._0.bonus;
+	} else {
+		return 0;
+	}
+};
 var _user$project$Players_List$playerRow = F2(
 	function (players, player) {
+		var bonus = _user$project$Players_List$equipBonus(player);
+		var strength = player.level + bonus;
 		return A2(
 			_elm_lang$html$Html$tr,
 			{ctor: '[]'},
@@ -200,7 +241,7 @@ var _user$project$Players_List$playerRow = F2(
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _user$project$Players_List$editBtn(player),
+									_0: _elm_lang$html$Html$text(player.equip),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
@@ -210,10 +251,45 @@ var _user$project$Players_List$playerRow = F2(
 									{ctor: '[]'},
 									{
 										ctor: '::',
-										_0: A2(_user$project$Players_List$deleteBtn, players, player),
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(bonus)),
 										_1: {ctor: '[]'}
 									}),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$td,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(
+												_elm_lang$core$Basics$toString(strength)),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$td,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _user$project$Players_List$editBtn(player),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$td,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _user$project$Players_List$deleteBtn(player),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -275,10 +351,43 @@ var _user$project$Players_List$list = function (players) {
 											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Actions'),
+												_0: _elm_lang$html$Html$text('Equipment'),
 												_1: {ctor: '[]'}
 											}),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$th,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Bonus'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$th,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Strength'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$th,
+														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Actions'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
 									}
 								}
 							}
@@ -306,31 +415,21 @@ var _user$project$Players_List$list = function (players) {
 		});
 };
 var _user$project$Players_List$maybeList = function (response) {
-	var _p1 = response;
-	switch (_p1.ctor) {
+	var _p2 = response;
+	switch (_p2.ctor) {
 		case 'NotAsked':
 			return _elm_lang$html$Html$text('');
 		case 'Loading':
 			return _elm_lang$html$Html$text('Loading...');
 		case 'Success':
-			return _user$project$Players_List$list(_p1._0);
+			return _user$project$Players_List$list(_p2._0);
 		default:
 			return _elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(_p1._0));
+				_elm_lang$core$Basics$toString(_p2._0));
 	}
 };
 var _user$project$Players_List$errValidation = function (model) {
-	var color = function () {
-		var _p2 = model.err;
-		switch (_p2) {
-			case 'Unchanged':
-				return 'grey';
-			case 'Changed successfully':
-				return 'green';
-			default:
-				return 'red';
-		}
-	}();
+	var color = _user$project$Players_Edit$colourValidation(model);
 	return A2(
 		_elm_lang$html$Html$div,
 		{

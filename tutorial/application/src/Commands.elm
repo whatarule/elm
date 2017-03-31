@@ -5,7 +5,7 @@ import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing ( decode, required )
 import Msgs exposing ( Msg )
-import Models exposing ( Model, Player, PlayerId )
+import Models exposing ( Model, Player, PlayerId, Method(..) )
 import RemoteData
 import RemoteData exposing ( WebData )
 import Html exposing ( Attribute )
@@ -13,8 +13,7 @@ import Html.Events exposing ( onWithOptions )
 import Json.Encode as Encode
 import Navigation exposing ( newUrl )
 import Routing exposing ( parseLocation, playerPath )
---import List
-import Guards exposing ( (|=), (=>) )
+--import Guards exposing ( (|=), (=>) )
 
 fetchPlayers : Cmd Msg
 fetchPlayers =
@@ -26,22 +25,6 @@ fetchPlayersUrl : String
 fetchPlayersUrl =
     "http://localhost:4000/players"
 
---findNewPlayer : List Player -> Cmd Msg
---findNewPlayer players =
---  let maybePlayer = players
---    |>  List.filter
---          ( \ player -> player.name == "" )
---    |>  List.head
---  in case maybePlayer of
---    Just player -> newUrl ( playerPath player.id )
---    Nothing -> Cmd.none
-
---checkNewPlayer : Player -> Cmd Msg
---checkNewPlayer player =
---  case player.name of
---    "" -> newUrl ( playerPath player.id )
---    _ -> Cmd.none
-
 checkNewPlayer : WebData ( List Player ) -> Cmd Msg
 checkNewPlayer response = case response of
   RemoteData.NotAsked -> Cmd.none
@@ -49,24 +32,17 @@ checkNewPlayer response = case response of
   RemoteData.Failure error -> Cmd.none
   RemoteData.Success players ->
     let maybePlayer = players
-      |>  List.filter
-            ( \ player -> player.name == "" )
-      |>  List.head
+          |>  List.filter
+                ( \ player -> player.name == "" )
+          |>  List.head
     in case maybePlayer of
-      Just player -> newUrl ( playerPath player.id )
-      Nothing -> Cmd.none
+        Just player ->
+          newUrl ( playerPath player.id )
+        Nothing ->
+          Cmd.none
 
---fetchNewPlayerUrl : List Player -> Cmd Msg
---fetchNewPlayerUrl players =
---  let emptyName player =
---        player.name == ""
---      new = players
---        |>  List.map emptyName
---        |>  List.any
---      path = playerUrl newPlayer.id
---  in  = new =>
---        Cmd.map OnChangeLocation path
---     |= Cmd.none
+home : Cmd Msg
+home = newUrl "http://localhost:3000/"
 
 
 playersDecoder : Decode.Decoder ( List Player )
@@ -78,6 +54,7 @@ playerDecoder =
   |>  required "id" Decode.string
   |>  required "name" Decode.string
   |>  required "level" Decode.int
+  |>  required "equip" Decode.string
 
 
 onLinkClick : msg -> Attribute msg
@@ -86,20 +63,19 @@ onLinkClick message =
           stopPropagation = False
       ,   preventDefault = True
       }
-  in onWithOptions "click" options ( Decode.succeed message )
+  in onWithOptions "click" options
+      ( Decode.succeed message )
 
 
 savePlayersUrl : String
 savePlayersUrl =
-    "http://localhost:4000/players/"
+    "http://localhost:4000/players"
 
 --savePlayerUrl : PlayerId -> String
 playerUrl : PlayerId -> String
 playerUrl playerId =
     "http://localhost:4000/players/" ++ playerId
 
-
-type Method = Patch | Post | Delete
 
 -- // Player
 savePlayerRequest : Method -> Player -> Http.Request Player
@@ -129,52 +105,56 @@ savePlayerCmd method player = player
 playerEncoder : Player -> Encode.Value
 playerEncoder player =
   let attributes = [
-          ( "id", Encode.string player.id )
-      ,   ( "name", Encode.string player.name )
-      ,   ( "level", Encode.int player.level )
+        ( "id", Encode.string player.id )
+      , ( "name", Encode.string player.name )
+      , ( "level", Encode.int player.level )
+      , ( "equip", Encode.string player.equip )
       ]
   in Encode.object attributes
 
 
-savePlayersCmd : Model -> Method -> Player -> Cmd Msg
-savePlayersCmd model method player = player
-  |>  savePlayerRequest method
-  |>  Http.send Msgs.OnPlayerSave
 
-
--- // List Player
---savePlayersCmd : List Player -> Cmd Msg
---savePlayersCmd players = players
+---- // List Player
+----savePlayersCmd : List Player -> Cmd Msg
+----savePlayersCmd players = players
+----  |>  savePlayersRequest
+----  |>  Http.send Msgs.OnPlayersSave
+--savePlayersCmd : Model -> Cmd Msg
+--savePlayersCmd model = model
 --  |>  savePlayersRequest
 --  |>  Http.send Msgs.OnPlayersSave
-----|>  Http.send Msgs.OnPlayerSave
 --
---savePlayersRequest : List Player -> Http.Request ( List Player )
+--savePlayersRequest : Model -> Http.Request ( List Player )
 ----savePlayersRequest : List Player -> Http.Request Player
---savePlayersRequest players =
+--savePlayersRequest model =
 --    Http.request {
---        body = players
+--    --  body = players
+--        body = testPlayers
 --          |>  playersEncoder
 --          |>  Http.jsonBody
 --    ,   expect = Http.expectJson playersDecoder
 ----  ,   expect = Http.expectJson playerDecoder
 --    ,   headers = [ ]
-----  ,   method = "PATCH"
+--    ,   method = "PATCH"
 ----  ,   method = "POST"
---    ,   method = "PUT"
+----  ,   method = "PUT"
 --    ,   timeout = Nothing
---    ,   url = "http://localhost:4000/players"
-----  ,   url = savePlayersUrl
-----  ,   url = savePlayersUrl ++ "7"
+--    ,   url = savePlayersUrl
 --    ,   withCredentials = False
 --    }
 --
 --playersEncoder : List Player -> Encode.Value
 --playersEncoder players =
+----    playerEncoder testPlayer
 --      List.map playerEncoder players
 --  |>  Encode.list
-----    playerEncoder testPlayer
 --
+--testPlayers : List Player
+--testPlayers = [
+--    testPlayer
+--  , testPlayer
+--  , testPlayer
+--  ]
 --
 --testPlayer : Player
 --testPlayer = {

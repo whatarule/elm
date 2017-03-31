@@ -3,32 +3,38 @@
     {
       "id": "1",
       "name": "Sally",
-      "level": 11
+      "level": 11,
+      "equip": "Steel sword"
     },
     {
       "id": "2",
       "name": "Lance",
-      "level": 1
+      "level": 1,
+      "equip": "Silver sword"
     },
     {
       "id": "3",
       "name": "Aki",
-      "level": 3
+      "level": 3,
+      "equip": ""
     },
     {
       "id": "4",
       "name": "Maria",
-      "level": 4
+      "level": 4,
+      "equip": ""
     },
     {
       "id": "5",
       "name": "Julian",
-      "level": 1
+      "level": 1,
+      "equip": ""
     },
     {
       "id": "6",
       "name": "Jaime",
-      "level": 10
+      "level": 10,
+      "equip": ""
     }
   ]
 }

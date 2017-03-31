@@ -22,18 +22,23 @@ page model = case model.route of
     notFoundView
 
 playerEditPage : Model -> PlayerId -> Html Msg
-playerEditPage model playerId = case model.players of
+playerEditPage model playerId =
+  case model.players of
     RemoteData.NotAsked -> text ""
     RemoteData.Loading -> text "Loading..."
     RemoteData.Success players ->
-        let maybePlayer = players
-            |> List.filter ( \player -> player.id == playerId )
-            |> List.head
-        in case maybePlayer of
-        --  Just player -> Players.Edit.view player
-            Just player -> Players.Edit.view model player
-            Nothing -> notFoundView
-    RemoteData.Failure err -> text ( toString err )
+      let maybePlayer = players
+        |> List.filter
+            ( \player -> player.id == playerId )
+        |> List.head
+      in case maybePlayer of
+      --Just player -> Players.Edit.view player
+        Just player ->
+          Players.Edit.view model player
+        Nothing ->
+          notFoundView
+    RemoteData.Failure err ->
+        text ( toString err )
 
 notFoundView : Html msg
 notFoundView = div [ ] [ text "Not found" ]

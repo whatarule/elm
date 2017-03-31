@@ -1,13 +1,20 @@
 var _user$project$Msgs$OnPlayerSave = function (a) {
 	return {ctor: 'OnPlayerSave', _0: a};
 };
-var _user$project$Msgs$DeletePlayer = F2(
+var _user$project$Msgs$SavePlayer = F2(
 	function (a, b) {
-		return {ctor: 'DeletePlayer', _0: a, _1: b};
+		return {ctor: 'SavePlayer', _0: a, _1: b};
 	});
+var _user$project$Msgs$DeletePlayer = function (a) {
+	return {ctor: 'DeletePlayer', _0: a};
+};
 var _user$project$Msgs$AddPlayer = F2(
 	function (a, b) {
 		return {ctor: 'AddPlayer', _0: a, _1: b};
+	});
+var _user$project$Msgs$ChangeEquip = F2(
+	function (a, b) {
+		return {ctor: 'ChangeEquip', _0: a, _1: b};
 	});
 var _user$project$Msgs$ChangeName = F2(
 	function (a, b) {
@@ -20,9 +27,9 @@ var _user$project$Msgs$ChangeLevel = F2(
 var _user$project$Msgs$OnLocationChange = function (a) {
 	return {ctor: 'OnLocationChange', _0: a};
 };
-var _user$project$Msgs$OnFetchPlayers = function (a) {
-	return {ctor: 'OnFetchPlayers', _0: a};
-};
 var _user$project$Msgs$ChangeLocation = function (a) {
 	return {ctor: 'ChangeLocation', _0: a};
+};
+var _user$project$Msgs$OnFetchPlayers = function (a) {
+	return {ctor: 'OnFetchPlayers', _0: a};
 };

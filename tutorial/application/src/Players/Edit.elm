@@ -5,7 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing ( .. )
 import Html.Events exposing ( .. )
 import Msgs exposing ( Msg (..) )
-import Models exposing ( Model, Player )
+import Models exposing ( Model, Player, Method(..) )
 import Routing exposing ( playersPath )
 import Commands exposing (..)
 import Guards exposing ( (|=), (=>) )
@@ -14,9 +14,10 @@ import Guards exposing ( (|=), (=>) )
 view : Model -> Player -> Html Msg
 view model player =
   div [ ] [
-        nav player
-    ,   form player
-    ,   errValidation model
+      nav player
+    , saveBtn player
+    , form player
+    , errValidation model
     ]
 
 nav : Player -> Html Msg
@@ -40,17 +41,22 @@ errValidation model =
 --     = ( model.err == "Unchanged" ) => "gray"
 --    |= ( model.err == "Changed Successfully" ) => "green"
 --    |= "red"
-  let color = case model.err of
-      "Unchanged" ->
-          "grey"
-      "Changed successfully" ->
-          "green"
-      _ ->
-          "red"
-  in div [ class "m3" ] [
-      div [ class "col col-5", style [ ( "color", color ) ] ]
-          [ text model.err ]
+  let color = colourValidation model
+  in div [ class "clearfix m3" ] [
+      div [ class "col col-5"
+          , style [ ( "color", color ) ]
+        ] [ text model.err ]
   ]
+
+colourValidation : Model -> String
+colourValidation model =
+  case model.err of
+    "Unchanged" ->
+        "grey"
+    "Saved" ->
+        "green"
+    _ ->
+        "red"
 
 form : Player -> Html Msg
 form player =
@@ -58,8 +64,26 @@ form player =
       h1 [ ] [ text player.name ]
     , formName player
     , formLevel player
+    , formEquip player
     , formValidation player
     ]
+
+
+--formString : String -> String -> Msg -> Html Msg
+--formString fieldName fieldValue msg =
+--  div [ class "clearfix py1" ] [
+--    div [ class "col col-5" ]
+--        [ text fieldName ]
+--  , div [ class "col col-7" ] [
+--      span [ class "h2 bold" ]
+--           [ text fieldValue ]
+--    , input [
+--        class "ml1 h1"
+--      , placeholder fieldValue
+--      , onInput msg
+--      ] []
+--    ]
+--  ]
 
 formName : Player -> Html Msg
 formName player =
@@ -70,12 +94,53 @@ formName player =
       span [ class "h2 bold" ]
            [ text player.name ]
     , input [
-          class "ml1 h1"
-        , placeholder player.name
-        , onInput ( Msgs.ChangeName player )
-        ] []
+        class "ml1 h1"
+      , placeholder player.name
+      , onInput ( Msgs.ChangeName player )
+      ] []
     ]
   ]
+
+formEquip : Player -> Html Msg
+formEquip player =
+  div [ class "clearfix py1" ] [
+    div [ class "col col-5" ]
+        [ text "Equipment" ]
+  , div [ class "col col-7" ] [
+      span [ class "h2 bold" ]
+           [ text player.equip ]
+  --, input [
+  --    class "ml1 h1"
+  --  , placeholder player.equip
+  --  , onInput ( Msgs.ChangeEquip player )
+  --  ] []
+    , select [
+        class "ml1 h2"
+      , onInput ( Msgs.ChangeEquip player ) ]
+      --  option [ value "" ] [ text "" ]
+      --, option [ value "Steel sword" ] [ text "Steel sword" ]
+      --  viewOption player ""
+      --, viewOption player "Steel sword"
+          ( List.map ( optionEquip player ) listEquip )
+    ]
+  ]
+
+type alias Equip = {
+    name : String
+  , bonus : Int
+  }
+
+listEquip : List Equip
+listEquip = [
+    Equip "" 0
+  , Equip "Steel sword" 3
+  , Equip "Silver sword" 7
+  ]
+
+optionEquip : Player -> Equip -> Html Msg
+optionEquip player equip =
+  let bool = player.equip == equip.name
+  in option [ value equip.name, selected bool ] [ text equip.name ]
 
 formValidation : Player -> Html Msg
 formValidation player =
@@ -128,5 +193,17 @@ listBtn =
     , text "List"
     ]
 
+saveBtn : Player -> Html Msg
+saveBtn player =
+  div [ class "clearfix mb2 black bg-white p1" ] [
+    a [ class "btn regular"
+      , href playersPath
+      , onLinkClick ( SavePlayer Patch player )
+      ] [
+      --i [ class "fa fa-chevron-left mr1" ] [ ]
+        i [ class "fa fa-chevron-right mr1" ] [ ]
+      , text "Save"
+      ]
+    ]
 
 

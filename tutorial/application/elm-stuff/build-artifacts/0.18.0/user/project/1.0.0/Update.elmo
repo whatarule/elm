@@ -9,18 +9,12 @@ var _user$project$Update$updatePlayer = F2(
 		var updatedPlayers = A2(_krisajenkins$remotedata$RemoteData$map, updatePlayerList, model.players);
 		return _elm_lang$core$Native_Utils.update(
 			model,
-			{players: updatedPlayers, err: 'Changed successfully'});
+			{players: updatedPlayers, err: 'Unsaved'});
 	});
 var _user$project$Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
-			case 'ChangeLocation':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: _elm_lang$navigation$Navigation$newUrl(_p0._0)
-				};
 			case 'OnFetchPlayers':
 				var _p1 = _p0._0;
 				return {
@@ -29,6 +23,12 @@ var _user$project$Update$update = F2(
 						model,
 						{players: _p1}),
 					_1: _user$project$Commands$checkNewPlayer(_p1)
+				};
+			case 'ChangeLocation':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _elm_lang$navigation$Navigation$newUrl(_p0._0)
 				};
 			case 'OnLocationChange':
 				var newRoute = _user$project$Routing$parseLocation(_p0._0);
@@ -46,8 +46,8 @@ var _user$project$Update$update = F2(
 					{level: _p2.level + _p0._1});
 				return {
 					ctor: '_Tuple2',
-					_0: model,
-					_1: A2(_user$project$Commands$savePlayerCmd, _user$project$Commands$Patch, updatedPlayer)
+					_0: A2(_user$project$Update$updatePlayer, model, updatedPlayer),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ChangeName':
 				var updatedPlayer = _elm_lang$core$Native_Utils.update(
@@ -55,26 +55,47 @@ var _user$project$Update$update = F2(
 					{name: _p0._1});
 				return {
 					ctor: '_Tuple2',
-					_0: model,
-					_1: A2(_user$project$Commands$savePlayerCmd, _user$project$Commands$Patch, updatedPlayer)
+					_0: A2(_user$project$Update$updatePlayer, model, updatedPlayer),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangeEquip':
+				var updatedPlayer = _elm_lang$core$Native_Utils.update(
+					_p0._0,
+					{equip: _p0._1});
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Update$updatePlayer, model, updatedPlayer),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AddPlayer':
 				return {
 					ctor: '_Tuple2',
-					_0: model,
-					_1: A2(_user$project$Commands$savePlayerCmd, _user$project$Commands$Post, _p0._1)
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{err: 'Unsaved'}),
+					_1: A2(_user$project$Commands$savePlayerCmd, _user$project$Models$Post, _p0._1)
 				};
 			case 'DeletePlayer':
 				return {
 					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{err: 'Unsaved'}),
+					_1: A2(_user$project$Commands$savePlayerCmd, _user$project$Models$Delete, _p0._0)
+				};
+			case 'SavePlayer':
+				return {
+					ctor: '_Tuple2',
 					_0: model,
-					_1: A2(_user$project$Commands$savePlayerCmd, _user$project$Commands$Delete, _p0._1)
+					_1: A2(_user$project$Commands$savePlayerCmd, _p0._0, _p0._1)
 				};
 			default:
 				if (_p0._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
-						_0: A2(_user$project$Update$updatePlayer, model, _p0._0._0),
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{err: 'Saved'}),
 						_1: _user$project$Commands$fetchPlayers
 					};
 				} else {

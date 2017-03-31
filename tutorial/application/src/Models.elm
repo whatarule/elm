@@ -16,6 +16,7 @@ type alias Player = {
         id : PlayerId
     ,   name : String
     ,   level : Int
+    ,   equip : String
     }
 
 type Route =
@@ -27,6 +28,10 @@ initialModel : Route -> Model
 initialModel route = {
         players = RemoteData.Loading
     ,   route = route
-    ,   err = ""
+    ,   err = "Unchanged"
     }
 -- initialModel = { players = [ Player "1" "Sam" 1 ] }
+
+type Method = Patch | Post | Delete
+
+
