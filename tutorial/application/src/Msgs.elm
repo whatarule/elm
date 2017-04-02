@@ -7,7 +7,8 @@ import Navigation exposing ( Location )
 import Http
 
 type Msg =
-    OnFetchPlayers ( WebData ( List Player ) )
+    None
+  | OnFetchPlayers ( WebData ( List Player ) )
   | ChangeLocation String
   | OnLocationChange Location
   | ChangeLevel Player Int

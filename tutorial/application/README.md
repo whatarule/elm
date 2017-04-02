@@ -97,8 +97,7 @@ errValidation model =
 [on "src/Players/Edit.elm"][edit]
 
 ### Optimistic updates
-- Add model update to and remove save Cmd from "Change" Msgs
-- Add "saveBtn"
+- Add model update to "Change" Msgs and remove save Cmd from them
 ```elm
   Msgs.ChangeLevel player howMuch ->
     let updatedPlayer = { player | level = player.level + howMuch }
@@ -110,30 +109,49 @@ errValidation model =
     in ( updatePlayer model updatedPlayer, Cmd.none )
 ```
 [on "src/Update.elm"][update]
+
+- Add "saveBtn" with some validations
 ```elm
 saveBtn : Player -> Html Msg
 saveBtn player =
-  div [ class "clearfix mb2 black bg-white p1" ] [
-    a [ class "btn regular"
-      , href playersPath
-      , onLinkClick ( SavePlayer Patch player )
-      ] [
-      --i [ class "fa fa-chevron-left mr1" ] [ ]
-        i [ class "fa fa-chevron-right mr1" ] [ ]
-      , text "Save"
+  let bool
+     = player.name == "" => True
+    |= player.level < 1 => True
+    |= False
+  in div [ class "clearfix m3" ] [
+      div [ class "col col-5" ] [
+        button
+          [ class "regular"
+          , onLinkClick ( SavePlayer Patch player )
+          , disabled bool ]
+          [ text "Save" ]
+        ]
       ]
-    ]
+
+btnLevelDecrease : Player -> Html Msg
+btnLevelDecrease player =
+--let message = Msgs.ChangeLevel player -1
+  let message
+     = 1 < player.level =>
+        Msgs.ChangeLevel player -1
+    |=  Msgs.None
+  in a [ class "btn ml1 h1"
+       , onClick message
+       ] [ i [ class "fa fa-minus-circle" ] [ ]
+      ]
 ```
 [on "src/Player/Edit.elm"][edit]
 
 ### Validations
-- Add "formValidation"
+- Add "formValidation" on Edit view
 ```elm
 formValidation : Player -> Html Msg
 formValidation player =
   let ( message, color )
-     = ( player.name == "" ) =>
+     = player.name == "" =>
         ( "Name is empty", "red" )
+    |= player.level < 1 =>
+        ( "Level is less than 1", "red" )
     |=  ( "", "" )
   in div [ class "clearfix py1" ] [
       div [ class "col col-5"
@@ -145,8 +163,6 @@ formValidation player =
 
 ### Add perks and bonuses
 - Add a field for equipment as a Player status
-- Make list of equipments with bonus strength
-- Calculate strength and show it on List view
 ```elm
 type alias Player = {
         id : PlayerId
@@ -157,6 +173,7 @@ type alias Player = {
 ```
 [on "src/Model.elm"][model]
 
+- Make list of equipments with bonus strength
 ```elm
 type alias Equip = {
     name : String
@@ -193,9 +210,15 @@ formEquip player =
           ( List.map ( optionEquip player ) listEquip )
     ]
   ]
+
+optionEquip : Player -> Equip -> Html Msg
+optionEquip player equip =
+  let bool = player.equip == equip.name
+  in option [ value equip.name, selected bool ] [ text equip.name ]
 ```
 [on "src/Player/Edit.elm"][edit]
 
+- Calculate strength and show it on List view
 ```elm
 equipBonus : Player -> Int
 equipBonus player =

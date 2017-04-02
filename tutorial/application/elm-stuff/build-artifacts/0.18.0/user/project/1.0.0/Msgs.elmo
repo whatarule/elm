@@ -33,3 +33,4 @@ var _user$project$Msgs$ChangeLocation = function (a) {
 var _user$project$Msgs$OnFetchPlayers = function (a) {
 	return {ctor: 'OnFetchPlayers', _0: a};
 };
+var _user$project$Msgs$None = {ctor: 'None'};

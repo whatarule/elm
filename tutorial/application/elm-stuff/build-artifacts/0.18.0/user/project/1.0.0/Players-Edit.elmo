@@ -1,44 +1,57 @@
 var _user$project$Players_Edit$saveBtn = function (player) {
+	var bool = A2(
+		_Fresheyeball$elm_guards$Guards_ops['|='],
+		A2(
+			_Fresheyeball$elm_guards$Guards_ops['=>'],
+			_elm_lang$core$Native_Utils.eq(player.name, ''),
+			true),
+		A2(
+			_Fresheyeball$elm_guards$Guards_ops['|='],
+			A2(
+				_Fresheyeball$elm_guards$Guards_ops['=>'],
+				_elm_lang$core$Native_Utils.cmp(player.level, 1) < 0,
+				true),
+			false));
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('clearfix mb2 black bg-white p1'),
+			_0: _elm_lang$html$Html_Attributes$class('clearfix m3'),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$a,
+				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('btn regular'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$href(_user$project$Routing$playersPath),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Commands$onLinkClick(
-								A2(_user$project$Msgs$SavePlayer, _user$project$Models$Patch, player)),
-							_1: {ctor: '[]'}
-						}
-					}
+					_0: _elm_lang$html$Html_Attributes$class('col col-5'),
+					_1: {ctor: '[]'}
 				},
 				{
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$i,
+						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('fa fa-chevron-right mr1'),
-							_1: {ctor: '[]'}
+							_0: _elm_lang$html$Html_Attributes$class('regular'),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Commands$onLinkClick(
+									A2(_user$project$Msgs$SavePlayer, _user$project$Models$Patch, player)),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$disabled(bool),
+									_1: {ctor: '[]'}
+								}
+							}
 						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Save'),
-						_1: {ctor: '[]'}
-					}
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Save'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
 		});
@@ -102,7 +115,13 @@ var _user$project$Players_Edit$btnLevelIncrease = function (player) {
 		});
 };
 var _user$project$Players_Edit$btnLevelDecrease = function (player) {
-	var message = A2(_user$project$Msgs$ChangeLevel, player, -1);
+	var message = A2(
+		_Fresheyeball$elm_guards$Guards_ops['|='],
+		A2(
+			_Fresheyeball$elm_guards$Guards_ops['=>'],
+			_elm_lang$core$Native_Utils.cmp(1, player.level) < 0,
+			A2(_user$project$Msgs$ChangeLevel, player, -1)),
+		_user$project$Msgs$None);
 	return A2(
 		_elm_lang$html$Html$a,
 		{
@@ -194,7 +213,13 @@ var _user$project$Players_Edit$formValidation = function (player) {
 			_Fresheyeball$elm_guards$Guards_ops['=>'],
 			_elm_lang$core$Native_Utils.eq(player.name, ''),
 			{ctor: '_Tuple2', _0: 'Name is empty', _1: 'red'}),
-		{ctor: '_Tuple2', _0: '', _1: ''});
+		A2(
+			_Fresheyeball$elm_guards$Guards_ops['|='],
+			A2(
+				_Fresheyeball$elm_guards$Guards_ops['=>'],
+				_elm_lang$core$Native_Utils.cmp(player.level, 1) < 0,
+				{ctor: '_Tuple2', _0: 'Level is less than 1', _1: 'red'}),
+			{ctor: '_Tuple2', _0: '', _1: ''}));
 	var message = _p0._0;
 	var color = _p0._1;
 	return A2(

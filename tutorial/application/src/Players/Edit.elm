@@ -145,8 +145,10 @@ optionEquip player equip =
 formValidation : Player -> Html Msg
 formValidation player =
   let ( message, color )
-     = ( player.name == "" ) =>
+     = player.name == "" =>
         ( "Name is empty", "red" )
+    |= player.level < 1 =>
+        ( "Level is less than 1", "red" )
     |=  ( "", "" )
   in div [ class "clearfix py1" ] [
       div [ class "col col-5"
@@ -169,7 +171,11 @@ formLevel player =
 
 btnLevelDecrease : Player -> Html Msg
 btnLevelDecrease player =
-  let message = Msgs.ChangeLevel player -1
+--let message = Msgs.ChangeLevel player -1
+  let message
+     = 1 < player.level =>
+        Msgs.ChangeLevel player -1
+    |=  Msgs.None
   in a [ class "btn ml1 h1"
        , onClick message
        ] [ i [ class "fa fa-minus-circle" ] [ ]
@@ -193,17 +199,32 @@ listBtn =
     , text "List"
     ]
 
+--saveBtn : Player -> Html Msg
+--saveBtn player =
+--  div [ class "clearfix mb2 black bg-white p1" ] [
+--    a [ class "btn regular"
+--      , href playersPath
+--      , onLinkClick ( SavePlayer Patch player )
+--      ] [
+--      --i [ class "fa fa-chevron-left mr1" ] [ ]
+--        i [ class "fa fa-chevron-right mr1" ] [ ]
+--      , text "Save"
+--      ]
+--    ]
+
 saveBtn : Player -> Html Msg
 saveBtn player =
-  div [ class "clearfix mb2 black bg-white p1" ] [
-    a [ class "btn regular"
-      , href playersPath
-      , onLinkClick ( SavePlayer Patch player )
-      ] [
-      --i [ class "fa fa-chevron-left mr1" ] [ ]
-        i [ class "fa fa-chevron-right mr1" ] [ ]
-      , text "Save"
+  let bool
+     = player.name == "" => True
+    |= player.level < 1 => True
+    |= False
+  in div [ class "clearfix m3" ] [
+      div [ class "col col-5" ] [
+        button
+          [ class "regular"
+          , onLinkClick ( SavePlayer Patch player )
+          , disabled bool ]
+          [ text "Save" ]
+        ]
       ]
-    ]
-
 

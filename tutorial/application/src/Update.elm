@@ -13,6 +13,7 @@ import RemoteData
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = case msg of
+  Msgs.None -> ( model, Cmd.none )
 
   Msgs.OnFetchPlayers response ->
   --( { model | players = response }, Cmd.none )
