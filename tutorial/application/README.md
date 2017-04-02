@@ -1,10 +1,10 @@
-ample Elm application wirh "Improvements"
+Sample Elm application wirh "Improvements"
 =
 - [from Elm Tutorial][tutorial]
 
 [tutorial]: https://www.elm-tutorial.org/en/
 
-### [List of "Improvements"][impruvements] ###
+### [List of "Improvements"][improvements] ###
 - Create and delete players
 - Change the name of a player
 - Show an error message when an Http request fails
@@ -20,6 +20,9 @@ ample Elm application wirh "Improvements"
 
 [edit]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Players/Edit.elm
 [list]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Players/List.elm
+[model]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Model.elm
+[update]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Update.elm
+[commands]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Commands.elm
 
 ### Create and delete players
 - Change save Cmd to be able to use other HTTP methods
@@ -44,7 +47,7 @@ savePlayerRequest method player =
     }
 
 ```
-[src/][]
+[on "src/Commands.elm"][commands]
 
 ### Change the name of a player
 - Add "formName", based on "formLevel"
@@ -65,7 +68,7 @@ formName player =
     ]
   ]
 ```
-([src/Players/Edit.elm][edit])
+([on "src/Players/Edit.elm"][edit])
 
 ### Show an error message when an Http request fails
 - Add a field for error messages to Model and show it on Edit view
@@ -76,7 +79,7 @@ type alias Model = {
     ,   err : String
     }
 ```
-[src/Models.elm][]
+[on "src/Models.elm"][model]
 ```elm
 errValidation : Model -> Html Msg
 errValidation model =
@@ -91,7 +94,7 @@ errValidation model =
         ] [ text model.err ]
   ]
 ```
-[src/Players/Edit.elm][edit]
+[on "src/Players/Edit.elm"][edit]
 
 ### Optimistic updates
 - Add model update to and remove save Cmd from "Change" Msgs
@@ -106,7 +109,7 @@ errValidation model =
   --in ( model, savePlayerCmd Patch updatedPlayer )
     in ( updatePlayer model updatedPlayer, Cmd.none )
 ```
-[src/Update.elm][]
+[on "src/Update.elm"][update]
 ```elm
 saveBtn : Player -> Html Msg
 saveBtn player =
@@ -121,7 +124,8 @@ saveBtn player =
       ]
     ]
 ```
-[src/Player/Edit.elm][edit]
+[on "src/Player/Edit.elm"][edit]
+
 ### Validations
 - Add "formValidation"
 ```elm
@@ -137,18 +141,60 @@ formValidation player =
           ] [ text message ]
     ]
 ```
-[src/][]
+[on "src/Player/Edit.elm"][edit]
+
 ### Add perks and bonuses
-- Add a field for equipment to Model
+- Add a field for equipment as a Player status
 - Make list of equipments with bonus strength
 - Calculate strength and show it on List view
 ```elm
+type alias Player = {
+        id : PlayerId
+    ,   name : String
+    ,   level : Int
+    ,   equip : String
+    }
 ```
-[src/][]
+[on "src/Model.elm"][model]
 
 ```elm
+type alias Equip = {
+    name : String
+  , bonus : Int
+  }
+
+listEquip : List Equip
+listEquip = [
+    Equip "" 0
+  , Equip "Steel sword" 3
+  , Equip "Silver sword" 7
+  ]
+
+formEquip : Player -> Html Msg
+formEquip player =
+  div [ class "clearfix py1" ] [
+    div [ class "col col-5" ]
+        [ text "Equipment" ]
+  , div [ class "col col-7" ] [
+      span [ class "h2 bold" ]
+           [ text player.equip ]
+  --, input [
+  --    class "ml1 h1"
+  --  , placeholder player.equip
+  --  , onInput ( Msgs.ChangeEquip player )
+  --  ] []
+    , select [
+        class "ml1 h2"
+      , onInput ( Msgs.ChangeEquip player ) ]
+      --  option [ value "" ] [ text "" ]
+      --, option [ value "Steel sword" ] [ text "Steel sword" ]
+      --  viewOption player ""
+      --, viewOption player "Steel sword"
+          ( List.map ( optionEquip player ) listEquip )
+    ]
+  ]
 ```
-[src/][]
+[on "src/Player/Edit.elm"][edit]
 
 ```elm
 equipBonus : Player -> Int
@@ -177,7 +223,7 @@ playerRow players player =
     ,   td [ ] [ deleteBtn player ]
     ]
 ```
-[src/Player/List.elm][list]
+[on "src/Player/List.elm"][list]
 
 
 Elm Tutorial:
