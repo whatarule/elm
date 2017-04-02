@@ -15,8 +15,8 @@ Sample Elm application with "Improvements"
 [improvements]: https://www.elm-tutorial.org/en/09-conclusion/01-improvements.html
 
 # Overview
-- Picking up main additional codes for each feature.
-- Entire structure was adjusted for additions with extra codes.
+- Picking up main codes added for each feature.
+- Entire structure is adjusted for the changes.
 
 [edit]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Players/Edit.elm
 [list]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Players/List.elm
@@ -25,6 +25,12 @@ Sample Elm application with "Improvements"
 [commands]: https://github.com/whatarule/elm/tree/master/tutorial/application/src/Commands.elm
 
 ### Create and delete players
+- Add "Method" type for some HTTP methods
+```elm
+type Method = Patch | Post | Delete
+```
+[on "src/Models.elm"][model]
+
 - Change save Cmd to be able to use other HTTP methods
 ```elm
 savePlayerRequest : Method -> Player -> Http.Request Player
@@ -45,7 +51,6 @@ savePlayerRequest method player =
     ,   url = playerUrl urlId
     ,   withCredentials = False
     }
-
 ```
 [on "src/Commands.elm"][commands]
 
@@ -80,6 +85,7 @@ type alias Model = {
     }
 ```
 [on "src/Models.elm"][model]
+
 ```elm
 errValidation : Model -> Html Msg
 errValidation model =
