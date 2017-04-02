@@ -1,4 +1,4 @@
-Sample Elm application wirh "Improvements"
+Sample Elm application with "Improvements"
 =
 - [from Elm Tutorial][tutorial]
 
