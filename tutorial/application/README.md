@@ -54,7 +54,7 @@ savePlayerRequest method player =
 ```
  [on "src/Commands.elm"][commands]
 
-- Add new player validation for initial status edit
+- Add new player validation Cmd for initial status edit
 ```elm
 checkNewPlayer : WebData ( List Player ) -> Cmd Msg
 checkNewPlayer response = case response of
