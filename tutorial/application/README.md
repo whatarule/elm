@@ -1,4 +1,4 @@
-Sample Elm application with "Improvements"
+Elm SPA example with "Improvements"
 =
 - [from Elm Tutorial][tutorial]
 
