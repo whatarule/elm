@@ -52,7 +52,27 @@ savePlayerRequest method player =
     ,   withCredentials = False
     }
 ```
-[on "src/Commands.elm"][commands]
+ [on "src/Commands.elm"][commands]
+
+- Add new player validation for initial status edit
+```elm
+checkNewPlayer : WebData ( List Player ) -> Cmd Msg
+checkNewPlayer response = case response of
+  RemoteData.NotAsked -> Cmd.none
+  RemoteData.Loading -> Cmd.none
+  RemoteData.Failure error -> Cmd.none
+  RemoteData.Success players ->
+    let maybePlayer = players
+          |>  List.filter
+                ( \ player -> player.name == "" )
+          |>  List.head
+    in case maybePlayer of
+        Just player ->
+          newUrl ( playerPath player.id )
+        Nothing ->
+          Cmd.none
+```
+ [on "src/Commands.elm"][commands]
 
 ### Change the name of a player
 - Add "formName", based on "formLevel"
